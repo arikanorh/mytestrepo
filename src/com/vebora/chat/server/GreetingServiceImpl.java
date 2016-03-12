@@ -80,7 +80,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 		Date timeStamp = new Date();
 		Integer chatTextId = texts.size() + 1;
-		String chatText = text;
+		String chatText = timeStamp + " : " + text;
 
 		texts.add(new ChatText(chatTextId, chatText, userName, timeStamp, aid));
 
