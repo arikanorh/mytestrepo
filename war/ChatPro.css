@@ -1,0 +1,46 @@
+ 
+.chat-ChatMainPanel {
+	margin: auto;
+	max-width: 500px;
+	width: 100%;
+	height: 500px;
+}
+.chat-ChatMainPanel tr:nth-child(1),.chat-ChatMainPanel tr:nth-child(3){
+	height: 10%;
+}
+
+
+
+.chat-ChatTextAreaPanel {
+	width: 100%;
+	height: 100%;
+	border: 1px solid black;
+	background: #777777;
+}
+.chat-ChatTextAreaPanel .chatListPanel {
+	width: 100%;
+ 	padding: 0px;
+}
+.chat-ChatTextAreaPanel .chatScrollPanel{
+	    max-height: 450px;
+	
+}
+.chat-TypeAndSendPanel {
+	width: 100%;
+	height: 40px;
+}
+
+.chat-TypeAndSendPanel .textArea {
+	width: 100%;
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+}
+
+.chat-TypeAndSendPanel .sendButton {
+	padding: 0px;
+	margin: 0px;
+	width: 100%;
+	height: 95%;
+	margin-left: 4px;
+}

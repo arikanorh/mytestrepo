@@ -1,0 +1,3 @@
+# Module chatpro
+# RPC service class, partial path of RPC policy file
+com.vebora.chat.client.GreetingService, BF479F2B227E4F6D82A65E02157CA767.gwt.rpc
