@@ -7,9 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import com.google.appengine.api.memcache.MemcacheService;
+import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.vebora.chat.client.GreetingService;
-import com.vebora.chat.shared.System;
+import com.vebora.chat.shared.SystemInfo;
 import com.vebora.chat.shared.model.ChatText;
 
 @SuppressWarnings("serial")
@@ -26,7 +28,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		// User logged in log
 		if (usersWithId.containsKey(aid)) {
 			String userName = usersWithId.get(aid);
-			addNewChatText("[SYSTEM]", "[" + userName + "] has joined again", System.AID);
+			addNewChatText("[SYSTEM]", "[" + userName + "] has joined again", SystemInfo.AID);
 			return userName;
 
 		} else {
@@ -41,12 +43,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			// New user
 			userAid = String.valueOf(new Random().nextInt());
 			usersWithId.put(userAid, name);
-			addNewChatText("[SYSTEM]", "[" + name + "] has joined", System.AID);
+			addNewChatText("[SYSTEM]", "[" + name + "] has joined", SystemInfo.AID);
 
 		} else {
 			if (usersWithId.containsKey(aid)) {
 				String oldUserName = usersWithId.get(aid);
-				addNewChatText("[SYSTEM]", "[" + oldUserName + "] has changed name as [" + name + "]", System.AID);
+				addNewChatText("[SYSTEM]", "[" + oldUserName + "] has changed name as [" + name + "]", SystemInfo.AID);
 
 			}
 			usersWithId.put(userAid, name);
@@ -83,6 +85,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		String chatText = timeStamp + " : " + text;
 
 		texts.add(new ChatText(chatTextId, chatText, userName, timeStamp, aid));
+
+		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
+
+		syncCache.put(timeStamp, text);
 
 	}
 

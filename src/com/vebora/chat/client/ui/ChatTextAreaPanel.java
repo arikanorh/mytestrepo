@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.vebora.chat.client.StyledComposite;
-import com.vebora.chat.shared.System;
+import com.vebora.chat.shared.SystemInfo;
 import com.vebora.chat.shared.model.ChatText;
 
 public class ChatTextAreaPanel extends StyledComposite {
@@ -57,7 +57,7 @@ public class ChatTextAreaPanel extends StyledComposite {
 			String aid = text.getAid();
 			String color = "";
 
-			if (System.AID.equals(aid)) {
+			if (SystemInfo.AID.equals(aid)) {
 				color = "#000000";
 			} else if (activeUsers.containsKey(aid)) {
 				color = activeUsers.get(aid);

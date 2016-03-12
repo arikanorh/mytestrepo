@@ -20,12 +20,13 @@ public class ChatPro implements EntryPoint {
 
 	private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
+	private final Integer chatTimer = 1000;
+
 	private Timer unreadChatTimer = new Timer() {
 
 		@Override
 		public void run() {
 			checkUnreadChats();
-
 		}
 
 	};
@@ -132,6 +133,7 @@ public class ChatPro implements EntryPoint {
 					lastReadChatId = result.get(result.size() - 1).getChatTextId();
 					chatMain.addChatTexts(result);
 				}
+				unreadChatTimer.schedule(chatTimer);
 
 			}
 		});
@@ -140,7 +142,7 @@ public class ChatPro implements EntryPoint {
 
 	private void startTimer() {
 		if (!unreadChatTimer.isRunning()) {
-			unreadChatTimer.scheduleRepeating(1000);
+			unreadChatTimer.run();
 		}
 	}
 }
