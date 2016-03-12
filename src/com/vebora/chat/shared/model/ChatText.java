@@ -1,11 +1,16 @@
 package com.vebora.chat.shared.model;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class ChatText implements IsSerializable {
+public class ChatText implements IsSerializable, Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private String senderName;
 	private Integer chatTextId;
 	private String chatText;

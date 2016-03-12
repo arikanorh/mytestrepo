@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import com.google.appengine.api.memcache.MemcacheService;
 import com.google.appengine.api.memcache.MemcacheServiceFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.vebora.chat.client.GreetingService;
@@ -21,7 +20,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	private Map<String, String> usersWithId = new HashMap<>();
 
-	private List<ChatText> texts = new ArrayList<>();
+	private static Integer cacheId = 1;
+
+	static {
+		MemcacheServiceFactory.getMemcacheService().put(cacheId, new ArrayList<ChatText>());
+	}
 
 	@Override
 	public String authenticate(String aid) {
@@ -66,9 +69,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	public List<ChatText> getNewChatTexts(String aid, Integer lastReadChatTextId) {
 		// Authenticate maybe
 		if (lastReadChatTextId == null) {
-			return texts;
+			return getTextsFromCache();
 		} else {
 			List<ChatText> unreadchats = new ArrayList<>();
+			List<ChatText> texts = getTextsFromCache();
 			if (texts.size() > lastReadChatTextId) {
 				for (int a = lastReadChatTextId; a < texts.size(); a++) {
 					unreadchats.add(texts.get(a));
@@ -78,18 +82,20 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
+	@SuppressWarnings("unchecked")
+	private List<ChatText> getTextsFromCache() {
+		return (List<ChatText>) MemcacheServiceFactory.getMemcacheService().get(cacheId);
+	}
+
 	private synchronized void addNewChatText(String userName, String text, String aid) {
 
 		Date timeStamp = new Date();
-		Integer chatTextId = texts.size() + 1;
+		Integer chatTextId = getTextsFromCache().size() + 1;
 		String chatText = timeStamp + " : " + text;
-
+		List<ChatText> texts = getTextsFromCache();
 		texts.add(new ChatText(chatTextId, chatText, userName, timeStamp, aid));
 
-		MemcacheService syncCache = MemcacheServiceFactory.getMemcacheService();
-
-		syncCache.put(timeStamp, text);
+		MemcacheServiceFactory.getMemcacheService().put(cacheId, texts);
 
 	}
-
 }
