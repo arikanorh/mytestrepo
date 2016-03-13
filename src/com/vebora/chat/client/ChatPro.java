@@ -132,7 +132,7 @@ public class ChatPro implements EntryPoint {
 					lastReadChatId = result.get(result.size() - 1).getChatTextId();
 					chatMain.addChatTexts(result);
 				}
-
+				unreadChatTimer.schedule(2000);
 			}
 		});
 
@@ -140,7 +140,7 @@ public class ChatPro implements EntryPoint {
 
 	private void startTimer() {
 		if (!unreadChatTimer.isRunning()) {
-			unreadChatTimer.scheduleRepeating(1000);
+			unreadChatTimer.run();
 		}
 	}
 }

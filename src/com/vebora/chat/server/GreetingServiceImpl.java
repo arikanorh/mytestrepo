@@ -9,7 +9,7 @@ import java.util.Random;
 
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.vebora.chat.client.GreetingService;
-import com.vebora.chat.shared.System;
+import com.vebora.chat.shared.SystemInfo;
 import com.vebora.chat.shared.model.ChatText;
 
 @SuppressWarnings("serial")
@@ -19,14 +19,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	private Map<String, String> usersWithId = new HashMap<>();
 
-	private List<ChatText> texts = new ArrayList<>();
+	private static List<ChatText> texts = new ArrayList<>();
+
+	static {
+	}
 
 	@Override
 	public String authenticate(String aid) {
 		// User logged in log
 		if (usersWithId.containsKey(aid)) {
 			String userName = usersWithId.get(aid);
-			addNewChatText("[SYSTEM]", "[" + userName + "] has joined again", System.AID);
+			addNewChatText("[SYSTEM]", "[" + userName + "] has joined again", SystemInfo.AID);
 			return userName;
 
 		} else {
@@ -41,12 +44,12 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			// New user
 			userAid = String.valueOf(new Random().nextInt());
 			usersWithId.put(userAid, name);
-			addNewChatText("[SYSTEM]", "[" + name + "] has joined", System.AID);
+			addNewChatText("[SYSTEM]", "[" + name + "] has joined", SystemInfo.AID);
 
 		} else {
 			if (usersWithId.containsKey(aid)) {
 				String oldUserName = usersWithId.get(aid);
-				addNewChatText("[SYSTEM]", "[" + oldUserName + "] has changed name as [" + name + "]", System.AID);
+				addNewChatText("[SYSTEM]", "[" + oldUserName + "] has changed name as [" + name + "]", SystemInfo.AID);
 
 			}
 			usersWithId.put(userAid, name);
@@ -76,7 +79,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
-	private synchronized void addNewChatText(String userName, String text, String aid) {
+	public static synchronized void addNewChatText(String userName, String text, String aid) {
 
 		Date timeStamp = new Date();
 		Integer chatTextId = texts.size() + 1;
@@ -85,5 +88,4 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		texts.add(new ChatText(chatTextId, chatText, userName, timeStamp, aid));
 
 	}
-
 }
