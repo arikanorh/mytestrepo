@@ -12,5 +12,5 @@ public interface GreetingServiceAsync {
 
 	void sendChatText(String aid, String text, AsyncCallback<Void> callback);
 
-	void getNewChatTexts(String aid, Integer lastReadChatTextId, AsyncCallback<List<ChatText>> callback);
+	void getNewChatTexts(String aid, Long lastReadChatTextId, AsyncCallback<List<ChatText>> callback);
 }

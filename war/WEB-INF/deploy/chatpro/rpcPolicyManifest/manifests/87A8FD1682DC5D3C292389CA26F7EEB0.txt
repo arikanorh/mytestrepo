@@ -1,0 +1,2 @@
+serviceClass: com.vebora.chat.client.GreetingService
+path: 4EF9CD8E94427AC6BA8604C2FBDD6B01.gwt.rpc

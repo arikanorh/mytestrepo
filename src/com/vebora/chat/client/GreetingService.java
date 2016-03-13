@@ -17,5 +17,5 @@ public interface GreetingService extends RemoteService {
 
 	void sendChatText(String aid, String text);
 
-	List<ChatText> getNewChatTexts(String aid, Integer lastReadChatTextId);
+	List<ChatText> getNewChatTexts(String aid, Long lastReadChatTextId);
 }

@@ -12,7 +12,7 @@ public class ChatText implements IsSerializable, Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	private String senderName;
-	private Integer chatTextId;
+	private Long chatTextId;
 	private String chatText;
 	private Date timeSTamp;
 	private String aid;
@@ -20,7 +20,7 @@ public class ChatText implements IsSerializable, Serializable {
 	public ChatText() {
 	}
 
-	public ChatText(Integer chatTextId, String chatText, String senderName, Date timeStamp, String aid) {
+	public ChatText(Long chatTextId, String chatText, String senderName, Date timeStamp, String aid) {
 		this.chatTextId = chatTextId;
 		this.chatText = chatText;
 		this.senderName = senderName;
@@ -32,7 +32,7 @@ public class ChatText implements IsSerializable, Serializable {
 		return chatText;
 	}
 
-	public Integer getChatTextId() {
+	public Long getChatTextId() {
 		return chatTextId;
 	}
 
@@ -40,7 +40,7 @@ public class ChatText implements IsSerializable, Serializable {
 		this.chatText = chatText;
 	}
 
-	public void setChatTextId(Integer chatTextId) {
+	public void setChatTextId(Long chatTextId) {
 		this.chatTextId = chatTextId;
 	}
 
