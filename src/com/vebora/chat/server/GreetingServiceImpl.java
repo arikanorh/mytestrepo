@@ -25,12 +25,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	private DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
+<<<<<<< HEAD
+=======
+	private static List<ChatText> texts = new ArrayList<>();
+
+>>>>>>> master
 	static {
 	}
 
 	@Override
 	public String authenticate(String aid) {
 		// User logged in log
+<<<<<<< HEAD
+=======
+		if (usersWithId.containsKey(aid)) {
+			String userName = usersWithId.get(aid);
+			addNewChatText("[SYSTEM]", "[" + userName + "] has joined again", SystemInfo.AID);
+			return userName;
+>>>>>>> master
 
 		try {
 			Entity user = ds.get(KeyFactory.createKey("User", Long.valueOf(aid)));
@@ -48,6 +60,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		String userAid = aid;
 		if (aid == null) {
 			// New user
+<<<<<<< HEAD
 			Entity user = new Entity("User");
 			user.setProperty("username", name);
 			ds.put(user);
@@ -58,6 +71,19 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 			Entity user = new Entity("User", userAid);
 			user.setProperty("username", name);
 			ds.put(user);
+=======
+			userAid = String.valueOf(new Random().nextInt());
+			usersWithId.put(userAid, name);
+			addNewChatText("[SYSTEM]", "[" + name + "] has joined", SystemInfo.AID);
+
+		} else {
+			if (usersWithId.containsKey(aid)) {
+				String oldUserName = usersWithId.get(aid);
+				addNewChatText("[SYSTEM]", "[" + oldUserName + "] has changed name as [" + name + "]", SystemInfo.AID);
+
+			}
+			usersWithId.put(userAid, name);
+>>>>>>> master
 		}
 		return userAid;
 	}
@@ -78,7 +104,11 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 		return getUnreadMessages(lastReadChatTextId, aid);
 
+<<<<<<< HEAD
 	}
+=======
+	public static synchronized void addNewChatText(String userName, String text, String aid) {
+>>>>>>> master
 
 	public synchronized void addNewChatText(String userName, String text, String aid) {
 
@@ -90,6 +120,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		ds.put(chatTextEntity);
 
 	}
+<<<<<<< HEAD
 
 	public List<ChatText> getUnreadMessages(Long lastReadDate, String aid) {
 		List<ChatText> unreadchats = new ArrayList<>();
@@ -111,4 +142,6 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 		return unreadchats;
 	}
+=======
+>>>>>>> master
 }

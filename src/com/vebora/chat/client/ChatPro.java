@@ -133,8 +133,12 @@ public class ChatPro implements EntryPoint {
 					lastReadChatId = result.get(result.size() - 1).getChatTextId();
 					chatMain.addChatTexts(result);
 				}
+<<<<<<< HEAD
 				unreadChatTimer.schedule(chatTimer);
 
+=======
+				unreadChatTimer.schedule(2000);
+>>>>>>> master
 			}
 		});
 
