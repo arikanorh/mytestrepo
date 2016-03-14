@@ -16,6 +16,8 @@ import com.google.appengine.api.datastore.Query.FilterPredicate;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 import com.vebora.chat.client.GreetingService;
+import com.vebora.chat.server.data.DataSourceManager;
+import com.vebora.chat.server.data.mapper.EntityMapperFactory;
 import com.vebora.chat.shared.SystemInfo;
 import com.vebora.chat.shared.model.ChatText;
 
@@ -81,14 +83,10 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	}
 
-	public static synchronized void addNewChatText(String userName, String text, String aid) {
+	public void addNewChatText(String userName, String text, String aid) {
 
-		Entity chatTextEntity = new Entity("ChatText");
-		chatTextEntity.setProperty("userid", aid);
-		chatTextEntity.setProperty("username", userName);
-		chatTextEntity.setProperty("text", text);
-		chatTextEntity.setProperty("timestamp", new Date());
-		ds.put(chatTextEntity);
+		ChatText chatText = new ChatText(null, text, userName, new Date(), aid);
+		DataSourceManager.getInstance().insert(chatText);
 
 	}
 
@@ -103,11 +101,8 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		PreparedQuery pq = ds.prepare(query);
 
 		for (Entity result : pq.asIterable()) {
-			String username = (String) result.getProperty("username");
-			String text = (String) result.getProperty("text");
-			String userid = (String) result.getProperty("userid");
-			Date timestamp = (Date) result.getProperty("timestamp");
-			unreadchats.add(new ChatText(timestamp.getTime(), text, username, timestamp, userid));
+			ChatText chatText = EntityMapperFactory.getChatTextEntityMapper().fromEntity(result);
+			unreadchats.add(chatText);
 
 		}
 		return unreadchats;
