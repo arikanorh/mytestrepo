@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.vebora.chat.server.data.DataSourceManager;
+import com.vebora.chat.shared.SystemInfo;
 import com.vebora.chat.shared.model.ChatText;
 
 public class MailHandler extends HttpServlet {
@@ -29,7 +30,7 @@ public class MailHandler extends HttpServlet {
 		try {
 			MimeMessage message = new MimeMessage(session, req.getInputStream());
 
-			DataSourceManager.getInstance().insert(new ChatText(null, message.getFrom()[0].toString(), message.getSubject(), new Date(), "1"));
+			DataSourceManager.getInstance().save(new ChatText(null, message.getFrom()[0].toString(), message.getSubject(), new Date(), SystemInfo.AID));
 
 		} catch (MessagingException e) {
 		}

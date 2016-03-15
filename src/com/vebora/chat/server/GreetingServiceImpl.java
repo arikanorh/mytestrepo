@@ -1,5 +1,7 @@
 package com.vebora.chat.server;
 
+import static com.googlecode.objectify.ObjectifyService.ofy;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -9,17 +11,16 @@ import com.google.appengine.api.datastore.DatastoreServiceFactory;
 import com.google.appengine.api.datastore.Entity;
 import com.google.appengine.api.datastore.EntityNotFoundException;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.appengine.api.datastore.PreparedQuery;
-import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
-import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
+import com.googlecode.objectify.ObjectifyService;
+import com.googlecode.objectify.cmd.Query;
 import com.vebora.chat.client.GreetingService;
 import com.vebora.chat.server.data.DataSourceManager;
-import com.vebora.chat.server.data.mapper.EntityMapperFactory;
 import com.vebora.chat.shared.SystemInfo;
 import com.vebora.chat.shared.model.ChatText;
+import com.vebora.chat.shared.model.User;
 
 @SuppressWarnings("serial")
 public class GreetingServiceImpl extends RemoteServiceServlet implements
@@ -28,14 +29,17 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	private static DatastoreService ds = DatastoreServiceFactory.getDatastoreService();
 
 	static {
+		ObjectifyService.register(ChatText.class);
+		ObjectifyService.register(User.class);
+
 	}
 
 	@Override
-	public String authenticate(String aid) {
+	public String authenticate(Long aid) {
 		// User logged in log
 
 		try {
-			Entity user = ds.get(KeyFactory.createKey("User", Long.valueOf(aid)));
+			Entity user = ds.get(KeyFactory.createKey("User", aid));
 			String userName = (String) user.getProperty("username");
 			// addNewChatText("[SYSTEM]", "[" + userName + "] has joined again", SystemInfo.AID);
 			return userName;
@@ -45,30 +49,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
+	/**
+	 * Returns aid.
+	 */
 	@Override
-	public String setName(String name, String aid) {
-		String userAid = aid;
-		if (aid == null) {
+	public Long setName(String name, Long userid) {
+		User user = new User(name, userid);
+		if (userid == null) {
 			// New user
-			Entity user = new Entity("User");
-			user.setProperty("username", name);
-			ds.put(user);
-			userAid = String.valueOf(user.getKey().getId());
 			addNewChatText("[SYSTEM]", "[" + name + "] has joined", SystemInfo.AID);
 
-		} else {
-			Entity user = new Entity("User", userAid);
-			user.setProperty("username", name);
-			ds.put(user);
-
 		}
-		return userAid;
+		return DataSourceManager.getInstance().save(user).getId();
 	}
 
 	@Override
-	public void sendChatText(String aid, String text) {
+	public void sendChatText(Long aid, String text) {
 		try {
-			Entity user = ds.get(KeyFactory.createKey("User", Long.valueOf(aid)));
+			Entity user = ds.get(KeyFactory.createKey("User", aid));
 			String userName = (String) user.getProperty("username");
 			addNewChatText(userName, text, aid);
 		} catch (EntityNotFoundException e) {
@@ -77,34 +75,24 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<ChatText> getNewChatTexts(String aid, Long lastReadChatTextId) {
+	public List<ChatText> getNewChatTexts(Long lastReadChatTextId) {
 
-		return getUnreadMessages(lastReadChatTextId, aid);
-
-	}
-
-	public void addNewChatText(String userName, String text, String aid) {
-
-		ChatText chatText = new ChatText(null, text, userName, new Date(), aid);
-		DataSourceManager.getInstance().insert(chatText);
-
-	}
-
-	public List<ChatText> getUnreadMessages(Long lastReadDate, String aid) {
-		List<ChatText> unreadchats = new ArrayList<>();
-		Query query = new Query("ChatText");
-		if (lastReadDate != null) {
-			FilterPredicate timestampFilter = new FilterPredicate("timestamp", FilterOperator.GREATER_THAN, new Date(lastReadDate));
-			query.setFilter(timestampFilter);
+		Query<ChatText> query = ofy().load().type(ChatText.class);
+		query = query.order("timestamp");
+		if (lastReadChatTextId != null) {
+			FilterPredicate timestampFilter = new FilterPredicate("timestamp", FilterOperator.GREATER_THAN, new Date(lastReadChatTextId));
+			query = query.filter(timestampFilter);
 		}
-		query.addSort("timestamp", SortDirection.ASCENDING);
-		PreparedQuery pq = ds.prepare(query);
+		List<ChatText> unreadchats = query.list();
+		return new ArrayList<>(unreadchats);
 
-		for (Entity result : pq.asIterable()) {
-			ChatText chatText = EntityMapperFactory.getChatTextEntityMapper().fromEntity(result);
-			unreadchats.add(chatText);
-
-		}
-		return unreadchats;
 	}
+
+	public void addNewChatText(String userName, String text, Long aid) {
+		Date now = new Date();
+		ChatText chatText = new ChatText(now.getTime(), text, userName, now, aid);
+		DataSourceManager.getInstance().save(chatText);
+
+	}
+
 }

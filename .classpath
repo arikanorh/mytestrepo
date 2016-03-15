@@ -5,5 +5,7 @@
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre7"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/guava-19.0.jar"/>
+	<classpathentry kind="lib" path="war/WEB-INF/lib/objectify-5.1.11.jar" sourcepath="C:/Users/MonsterPc/.m2/repository/com/googlecode/objectify/objectify/5.1.11/objectify-5.1.11-sources.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

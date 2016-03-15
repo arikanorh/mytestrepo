@@ -21,7 +21,7 @@ public class ChatTextEntityMapper implements EntityMapper<ChatText> {
 	public ChatText fromEntity(Entity e) {
 		String username = (String) e.getProperty("username");
 		String text = (String) e.getProperty("text");
-		String userid = (String) e.getProperty("userid");
+		Long userid = (Long) e.getProperty("userid");
 		Date timestamp = (Date) e.getProperty("timestamp");
 		return new ChatText(timestamp.getTime(), text, username, timestamp, userid);
 	}

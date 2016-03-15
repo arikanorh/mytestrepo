@@ -1,62 +1,63 @@
 package com.vebora.chat.shared.model;
 
-import java.io.Serializable;
 import java.util.Date;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
+import com.googlecode.objectify.annotation.Entity;
+import com.googlecode.objectify.annotation.Id;
+import com.googlecode.objectify.annotation.Index;
 
-public class ChatText implements IsSerializable, Serializable {
+@Entity
+public class ChatText implements IsSerializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	private String senderName;
-	private Long chatTextId;
-	private String chatText;
-	private Date timeSTamp;
-	private String aid;
+	private String sendername;
+	@Id
+	private Long chattextid;
+	private String text;
+	@Index
+	private Date timestamp;
+	private Long aid;
 
 	public ChatText() {
 	}
 
-	public ChatText(Long chatTextId, String chatText, String senderName, Date timeStamp, String aid) {
-		this.chatTextId = chatTextId;
-		this.chatText = chatText;
-		this.senderName = senderName;
-		this.timeSTamp = timeStamp;
+	public ChatText(Long chatTextId, String chatText, String senderName, Date timeStamp, Long aid) {
+		this.chattextid = chatTextId;
+		this.text = chatText;
+		this.sendername = senderName;
+		this.timestamp = timeStamp;
 		this.aid = aid;
 	}
 
 	public String getChatText() {
-		return chatText;
+		return text;
 	}
 
 	public Long getChatTextId() {
-		return chatTextId;
+		return chattextid;
 	}
 
 	public void setChatText(String chatText) {
-		this.chatText = chatText;
+		this.text = chatText;
 	}
 
 	public void setChatTextId(Long chatTextId) {
-		this.chatTextId = chatTextId;
+		this.chattextid = chatTextId;
 	}
 
 	public String getSenderName() {
-		return senderName;
+		return sendername;
 	}
 
 	public Date getTimeSTamp() {
-		return timeSTamp;
+		return timestamp;
 	}
 
-	public String getAid() {
+	public Long getAid() {
 		return aid;
 	}
 
-	public void setAid(String aid) {
+	public void setAid(Long aid) {
 		this.aid = aid;
 	}
 }

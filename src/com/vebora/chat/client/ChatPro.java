@@ -16,7 +16,7 @@ import com.vebora.chat.shared.model.ChatText;
 public class ChatPro implements EntryPoint {
 	private ChatMainPanel chatMain = ChatMainPanel.anew();
 	private Long lastReadChatId = null;
-	private String aid = Cookies.getCookie("aid");
+	private Long aid = Cookies.getCookie("aid") == null ? null : Long.parseLong(Cookies.getCookie("aid"));
 
 	private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
@@ -34,7 +34,7 @@ public class ChatPro implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 
-		if (aid == null || aid.equals("")) {
+		if (aid == null) {
 			chatMain.enableChat(false);
 		} else {
 			greetingService.authenticate(aid, new AsyncCallback<String>() {
@@ -67,7 +67,7 @@ public class ChatPro implements EntryPoint {
 			@Override
 			public void onClick(ClickEvent event) {
 				final String nickName = chatMain.getSetNickPanel().getTypeArea().getText();
-				greetingService.setName(nickName, aid, new AsyncCallback<String>() {
+				greetingService.setName(nickName, aid, new AsyncCallback<Long>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -76,10 +76,10 @@ public class ChatPro implements EntryPoint {
 					}
 
 					@Override
-					public void onSuccess(String result) {
+					public void onSuccess(Long result) {
 						chatMain.enableChat(true);
 						if (aid == null) {
-							Cookies.setCookie("aid", result);
+							Cookies.setCookie("aid", String.valueOf(result));
 							aid = result;
 						}
 						chatMain.getTypeAndSendPanel().getTypeArea().setFocus(true);
@@ -119,7 +119,7 @@ public class ChatPro implements EntryPoint {
 	}
 
 	private void checkUnreadChats() {
-		greetingService.getNewChatTexts(aid, lastReadChatId, new AsyncCallback<List<ChatText>>() {
+		greetingService.getNewChatTexts(lastReadChatId, new AsyncCallback<List<ChatText>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
