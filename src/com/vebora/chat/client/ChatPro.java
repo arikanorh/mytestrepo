@@ -6,7 +6,6 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.RootPanel;
@@ -16,7 +15,6 @@ import com.vebora.chat.shared.model.ChatText;
 public class ChatPro implements EntryPoint {
 	private ChatMainPanel chatMain = ChatMainPanel.anew();
 	private Long lastReadChatId = null;
-	private Long aid = Cookies.getCookie("aid") == null ? null : Long.parseLong(Cookies.getCookie("aid"));
 
 	private final GreetingServiceAsync greetingService = GWT.create(GreetingService.class);
 
@@ -34,68 +32,13 @@ public class ChatPro implements EntryPoint {
 	@Override
 	public void onModuleLoad() {
 
-		if (aid == null) {
-			chatMain.enableChat(false);
-		} else {
-			greetingService.authenticate(aid, new AsyncCallback<String>() {
-
-				@Override
-				public void onSuccess(String result) {
-					if (result == null) {
-						chatMain.enableChat(false);
-						Cookies.removeCookie("aid");
-						aid = null;
-						chatMain.getSetNickPanel().getTypeArea().setFocus(true);
-
-					} else {
-						chatMain.setUserName(result);
-						chatMain.enableChat(true);
-						chatMain.getTypeAndSendPanel().getTypeArea().setFocus(true);
-
-					}
-				}
-
-				@Override
-				public void onFailure(Throwable caught) {
-
-				}
-			});
-		}
-
-		chatMain.getSetNickPanel().getSendButon().addClickHandler(new ClickHandler() {
-
-			@Override
-			public void onClick(ClickEvent event) {
-				final String nickName = chatMain.getSetNickPanel().getTypeArea().getText();
-				greetingService.setName(nickName, aid, new AsyncCallback<Long>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						chatMain.enableChat(false);
-
-					}
-
-					@Override
-					public void onSuccess(Long result) {
-						chatMain.enableChat(true);
-						if (aid == null) {
-							Cookies.setCookie("aid", String.valueOf(result));
-							aid = result;
-						}
-						chatMain.getTypeAndSendPanel().getTypeArea().setFocus(true);
-					}
-				});
-
-			}
-		});
-
 		chatMain.getTypeAndSendPanel().getSendButon().addClickHandler(new ClickHandler() {
 
 			@Override
 			public void onClick(ClickEvent event) {
 				String typedText = chatMain.getTypeAndSendPanel().getTypeArea().getText();
 
-				greetingService.sendChatText(aid, typedText, new AsyncCallback<Void>() {
+				greetingService.sendChatText(typedText, new AsyncCallback<Void>() {
 
 					@Override
 					public void onFailure(Throwable caught) {

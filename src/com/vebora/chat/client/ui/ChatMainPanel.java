@@ -13,15 +13,12 @@ public class ChatMainPanel extends StyledComposite {
 
 	private VerticalPanel main = new VerticalPanel();
 
-	private TypeAndSendPanel setNickPanel = TypeAndSendPanel.aNew();
-
 	private ChatTextAreaPanel textAreaPanel = ChatTextAreaPanel.aNew();
 
 	private TypeAndSendPanel typeAndSendPanel = TypeAndSendPanel.aNew();
 
 	private ChatMainPanel() {
 		initWidget(main);
-		enableChat(false);
 
 		main.setHorizontalAlignment(HasHorizontalAlignment.ALIGN_CENTER);
 
@@ -33,11 +30,8 @@ public class ChatMainPanel extends StyledComposite {
 
 			}
 		});
-		setNickPanel.getSendButon().setText("SET NICKNAME");
-		setNickPanel.getTypeArea().getElement().setAttribute("placeholder", "Enter your nickname to start chat..");
 		typeAndSendPanel.getSendButon().setText("SEND");
 
-		main.add(setNickPanel);
 		main.add(textAreaPanel);
 		main.add(typeAndSendPanel);
 	}
@@ -49,15 +43,6 @@ public class ChatMainPanel extends StyledComposite {
 	public void enableChat(boolean b) {
 		typeAndSendPanel.getTypeArea().setEnabled(b);
 		typeAndSendPanel.getSendButon().setEnabled(b);
-	}
-
-	public void setUserName(String result) {
-		setNickPanel.getTypeArea().setText(result);
-
-	}
-
-	public TypeAndSendPanel getSetNickPanel() {
-		return setNickPanel;
 	}
 
 	public void addChatTexts(List<ChatText> result) {

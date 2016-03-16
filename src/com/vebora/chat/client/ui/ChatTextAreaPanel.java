@@ -23,7 +23,7 @@ public class ChatTextAreaPanel extends StyledComposite {
 
 	private List<String> colors = new ArrayList<String>();
 
-	private Map<Long, String> activeUsers = new HashMap<>();
+	private Map<String, String> activeUsers = new HashMap<>();
 
 	private ChatTextAreaPanel() {
 		initWidget(main);
@@ -54,7 +54,7 @@ public class ChatTextAreaPanel extends StyledComposite {
 
 	public void addText(List<ChatText> result) {
 		for (ChatText text : result) {
-			Long aid = text.getAid();
+			String aid = text.getAid();
 			String color = "";
 
 			if (SystemInfo.AID.equals(aid)) {

@@ -11,11 +11,8 @@ import com.vebora.chat.shared.model.ChatText;
  */
 @RemoteServiceRelativePath("greet")
 public interface GreetingService extends RemoteService {
-	String authenticate(Long aid);
 
-	Long setName(String name, Long aid);
-
-	void sendChatText(Long aid, String text);
+	void sendChatText(String text);
 
 	List<ChatText> getNewChatTexts(Long lastReadChatTextId);
 }

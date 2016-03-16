@@ -16,17 +16,17 @@ public class ChatText implements IsSerializable {
 	private String text;
 	@Index
 	private Date timestamp;
-	private Long aid;
+	private String userid;
 
 	public ChatText() {
 	}
 
-	public ChatText(Long chatTextId, String chatText, String senderName, Date timeStamp, Long aid) {
+	public ChatText(Long chatTextId, String chatText, String senderName, Date timeStamp, String userid) {
 		this.chattextid = chatTextId;
 		this.text = chatText;
 		this.sendername = senderName;
 		this.timestamp = timeStamp;
-		this.aid = aid;
+		this.userid = userid;
 	}
 
 	public String getChatText() {
@@ -53,11 +53,11 @@ public class ChatText implements IsSerializable {
 		return timestamp;
 	}
 
-	public Long getAid() {
-		return aid;
+	public String getAid() {
+		return userid;
 	}
 
-	public void setAid(Long aid) {
-		this.aid = aid;
+	public void setAid(String userid) {
+		this.userid = userid;
 	}
 }
