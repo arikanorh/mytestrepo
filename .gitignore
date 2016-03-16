@@ -1,1 +1,4 @@
 /test-classes/
+/gwt-UnitCache/
+/war/chatpro/
+/war/WEB-INF/appengine-generated/

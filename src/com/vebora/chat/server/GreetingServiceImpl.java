@@ -36,6 +36,7 @@ public class GreetingServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public String authenticate(Long aid) {
+
 		// User logged in log
 
 		try {
